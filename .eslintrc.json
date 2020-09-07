@@ -1,0 +1,83 @@
+{
+	"extends": [
+		"eslint:recommended",
+		"airbnb-base"
+	],
+	"parserOptions": {
+		"ecmaVersion": 11,
+		"sourceType": "module",
+		"project": "./tsconfig.json"
+	},
+	"env": {
+		"node": true,
+		"browser": true,
+		"es2020": true
+	},
+	"rules": {
+		"lines-between-class-members": ["error", "always", {"exceptAfterSingleLine": true}],
+		"arrow-parens": ["error", "as-needed"],
+		"max-classes-per-file": "off",
+		"class-methods-use-this": "off",
+		"import/extensions": [
+			"error",
+			"ignorePackages",
+			{
+				"js": "never",
+				"ts": "never"
+			}
+		],
+		"import/prefer-default-export": "off",
+		"import/no-extraneous-dependencies": "off",
+		"indent": [
+			"error",
+			2
+		],
+		"no-console": "off",
+		"no-unused-vars": [
+			"error",
+			{
+				"argsIgnorePattern": "^_",
+				"varsIgnorePattern": "^_"
+			}
+		],
+		"quotes": [
+			"error",
+			"single"
+		]
+	},
+	"overrides": [
+		{
+			"files": [
+				"*.ts"
+			],
+			"parser": "@typescript-eslint/parser",
+			"extends": [
+				"plugin:import/typescript",
+				"plugin:@typescript-eslint/recommended"
+			],
+			"plugins": [
+				"@typescript-eslint"
+			],
+			"rules": {
+				"@typescript-eslint/ban-ts-comment": "off"
+			}
+		},
+		{
+			"files": [
+				"*.svelte"
+			],
+			"plugins": [
+				"svelte3"
+			],
+			"processor": "svelte3/svelte3",
+			"rules": {
+				"import/first": "off",
+				"import/no-duplicates": "off",
+				"import/no-mutable-exports": "off",
+				"import/no-mutable-unresolved": "off",
+				"no-undef": "off",
+				"no-unused-vars": "off"
+			}
+		}
+	]
+}

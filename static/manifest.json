@@ -1,0 +1,16 @@
+{
+	"short_name": "Personal Site",
+	"name": "Mike Lane's personal website, CV, and blog",
+	"description": "A site that is built with Svelte with Sapper, TypeScript preprocessing, and a GraphQL server through TypeGraphQL",
+	"categories": ["personalization", "productivity"],
+	"lang": "en-US",
+	"dir": "ltr",
+	"icons": [
+	],
+	"start_url": "/",
+	"display": "minimal-ui",
+	"background_color": "#FFFFFF",
+	"theme_color": "#3F83F8",
+	"screenshots": [
+	]
+}

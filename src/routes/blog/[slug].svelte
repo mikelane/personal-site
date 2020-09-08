@@ -2,7 +2,7 @@
   export async function preload(this: {fetch: typeof fetch}, page) {
     const {slug} = page.params;
     const res = await this.fetch(`blog/${slug}.json`);
-    if(res.status == 200) {
+    if(res.status === 200) {
       const post = await res.json();
       return {post}
     }

@@ -10,18 +10,26 @@ export interface ParsedGMPost {
   readonly excerpt?: string;
 }
 
-interface frontMatterQuery {
-  readonly '__typename': string
-  readonly title: string
-  readonly slug?: string
-}
-
 export interface getPostQuery {
   readonly '__typename': string
-  readonly content: string
-  readonly data: frontMatterQuery
+  readonly title: string
+  readonly slug: string
+  readonly createdAt: string
+  readonly updatedAt: string
+  readonly html: string
 }
 
 export interface getPostResolver {
   readonly getPost: getPostQuery
+}
+
+export interface PostRow {
+  readonly postId: number
+  readonly slug: string
+  readonly title: string
+  readonly postMd: string
+  readonly createdAt: string
+  readonly updatedAt: string
+  readonly deletedAt: string
+  readonly isDeleted: number
 }

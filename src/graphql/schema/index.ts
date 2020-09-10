@@ -1,25 +1,27 @@
 import { Field, ObjectType } from 'type-graphql';
 
-@ObjectType({ description: 'Blog post metadata model' })
-export class FrontMatter {
+@ObjectType({ description: 'Blog post model' })
+export class Post {
+  constructor(title: string, slug: string, html: string, createdAt: string, updatedAt: string) {
+    this.title = title;
+    this.slug = slug;
+    this.html = html;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
+
+  @Field({ description: 'Blog post html' })
+  html!: string;
+
   @Field({ description: 'Blog post title' })
   title!: string;
 
   @Field({ description: 'Blog post slug' })
   slug!: string;
-}
 
-@ObjectType({ description: 'Blog post model' })
-export class Post {
-  @Field({ description: 'Blog post Content' })
-  content!: string;
+  @Field({ description: 'Blog post creation time string' })
+  createdAt!: string
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  @Field(_type => FrontMatter, { description: 'Blog most metadata' })
-  data!: FrontMatter;
-
-  constructor(content: string, title: string, slug: string) {
-    this.content = content;
-    this.data = { title, slug };
-  }
+  @Field({ description: 'Blog post updated time string' })
+  updatedAt!: string
 }

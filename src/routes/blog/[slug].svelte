@@ -18,7 +18,6 @@
   export let post: getPostQuery
 </script>
 
-<h1>{`Check out this title -> ${post.data.title}`}</h1>
-<h2>TESTING</h2>
-<p>{post.content}</p>
-<pre>{JSON.stringify(post, null, 2)}</pre>
+<h1>{post.title}</h1>
+
+<p>{@html post.html}</p>

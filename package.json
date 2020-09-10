@@ -32,11 +32,14 @@
 	},
 	"dependencies": {
 		"@apollo/client": "^3.1.4",
+		"@types/highlight.js": "^9.12.4",
+		"@types/markdown-it": "^10.0.2",
 		"better-sqlite3": "^7.1.0",
 		"compression": "^1.7.4",
 		"cross-fetch": "^3.0.5",
 		"express": "^4.17.1",
-		"gray-matter": "^4.0.2",
+		"highlight.js": "^10.2.0",
+		"markdown-it": "^11.0.0",
 		"node-fetch": "^2.6.0",
 		"sirv": "^1.0.6"
 	},

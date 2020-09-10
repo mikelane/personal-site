@@ -13,15 +13,17 @@ const dev = mode === 'development';
 const createSapperAndApolloServer = async (graphqlPath: string): Promise<Express> => {
   const db = new Database(path.resolve('content', 'personal-site.db'), { verbose: console.log });
   try {
-    db.prepare(`CREATE TABLE IF NOT EXISTS posts (
-    post_id INTEGER PRIMARY KEY,
-    slug TEXT NOT NULL,
-    created_at DATETIME NOT NULL,
-    updated_at DATETIME,
-    deleted_on DATE,
-    is_deleted BOOLEAN NOT NULL,
-    post_mdsvex TEXT NOT NULL
-  )`).run();
+    db.prepare(`CREATE TABLE IF NOT EXISTS "posts" (
+ postId    INTEGER,
+ slug      TEXT NOT NULL,
+ title     TEXT,
+ postMd    TEXT NOT NULL,
+ createdAt DATETIME NOT NULL,
+ updatedAt DATETIME NOT NULL,
+ deletedAt DATETIME,
+ isDeleted BOOLEAN NOT NULL,
+ PRIMARY KEY("postId")
+);`).run();
   } catch (e) {
     console.error(e.message);
   }

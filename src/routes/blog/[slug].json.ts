@@ -13,14 +13,15 @@ export const get = async (req: express.Request, res: express.Response): Promise<
     cache: new InMemoryCache(),
   });
 
-  const GET_POST = gql`query getPost($slug: String!) {
-          getPost(slug: $slug) {
-              content
-              data {
-                  title
-              }
-          }
-      }`;
+  const GET_POST = gql`query getPost($slug:String!){
+      getPost(slug:$slug) {
+          title
+          slug
+          createdAt
+          updatedAt
+          html
+      }
+  }`;
 
   try {
     const response: ApolloQueryResult<getPostResolver> = await client.query({

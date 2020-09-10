@@ -1,14 +1,32 @@
 import Database from 'better-sqlite3';
 import { Max, Min } from 'class-validator';
-import * as fs from 'fs';
-import grayMatter from 'gray-matter';
-import { compile } from 'mdsvex';
+import hljs from 'highlight.js';
+import MarkdownIt from 'markdown-it';
 import * as path from 'path';
 import {
   Args, ArgsType, Field, Int, Query, Resolver,
 } from 'type-graphql';
 import { Post } from '../schema';
-import type { ParsedGMPost } from '../types';
+import type { PostRow } from '../types';
+
+const md: MarkdownIt = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true,
+  highlight: (str, lang) => {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return `<pre class="hljs"><code>${
+          hljs.highlight(lang, str, true).value
+        }</code></pre>`;
+      } catch (err) {
+        console.error(err.message);
+      }
+    }
+
+    return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`;
+  },
+});
 
 @Resolver()
 export class HelloWorldResolver {
@@ -31,19 +49,26 @@ export class PostResolver {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @Query(_response => Post, { description: 'Get a single post.' })
   async getPost(@Args() { slug }: GetPostArgs): Promise<Post> {
-    const statement = this.db.prepare('SELECT * FROM posts WHERE slug = ?').bind(slug);
-    const row = statement.get();
-    const postString = row.post_mdsvex;
-    console.info(`postString: ${postString}`);
-    const { content, data: { title } } = grayMatter(postString) as unknown as ParsedGMPost;
-
-    const mdsvexResult = await compile(content, {});
-
-    console.log(mdsvexResult);
-    if (mdsvexResult) {
-      return new Post(mdsvexResult.code, title, slug);
-    }
-    throw new Error('Error getting post');
+    const statement = this.db.prepare(`
+    SELECT
+        * 
+    FROM
+        posts 
+    WHERE
+        slug = ? 
+        AND isDeleted = 0`).bind(slug);
+    const {
+      postMd, title, createdAt, updatedAt,
+    } = statement.get() as PostRow;
+    console.info(
+      `Retrieved Post:
+      title: ${title}
+      postMd: ${postMd}
+      createdAt: ${createdAt}
+      updatedAt: ${updatedAt}`,
+    );
+    const html = md.render(postMd);
+    return new Post(title, slug, html, createdAt, updatedAt);
   }
 }
 
@@ -85,29 +110,29 @@ export class PostsResolver {
     FROM 
       posts 
     WHERE 
-      post_id BETWEEN ? AND ? 
-      AND is_deleted != 1;`)
-      .bind(Math.trunc(startId), Math.trunc(endId));
-    const rows = statement.all();
-    const posts: Post[] = [];
-    rows.map(row => {
-      const { content, data: { title, slug } } = grayMatter(
-        row.post_mdsvex,
-      ) as unknown as ParsedGMPost;
+      postId BETWEEN ? AND ? 
+      AND isDeleted = 0;`)
+      .bind(startId, endId);
 
-      let code: string | undefined;
-      compile(content, {})
-        .then(data => {
-          console.debug(data);
-          code = data?.code as string;
-          posts.push(new Post(code, title, slug));
-        })
-        .catch(err => {
-          console.error(err.message);
-          throw new Error(err);
-        });
-      return 'wow';
+    const rows: PostRow[] = statement.all();
+    console.log(rows);
+    const posts: Post[] = [];
+
+    rows.forEach(({
+      title, slug, postMd, createdAt, updatedAt,
+    }: PostRow) => {
+      console.info(
+        `Retrieved Post:
+      title: ${title}
+      postMd: ${postMd}
+      createdAt: ${createdAt}
+      updatedAt: ${updatedAt}`,
+      );
+
+      const html = md.render(postMd);
+      posts.push(new Post(title, slug, html, createdAt, updatedAt));
     });
+
     return posts;
   }
 }

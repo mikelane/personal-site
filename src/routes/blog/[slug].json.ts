@@ -28,8 +28,6 @@ export const get = async (req: express.Request, res: express.Response): Promise<
       query: GET_POST,
       variables: { slug },
     });
-    console.info(`WOW ${JSON.stringify(response)}`);
-    console.info(`typeof data: ${typeof response.data}`);
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(response.data?.getPost));
   } catch (e) {
